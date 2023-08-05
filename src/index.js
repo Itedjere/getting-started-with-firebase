@@ -8,6 +8,8 @@ import {
     doc,
     query,
     where,
+    orderBy,
+    serverTimestamp,
 } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -29,7 +31,7 @@ const db = getFirestore()
 const colRef = collection(db, 'books')
 
 // Queries
-const q = query(colRef, where("author", "==", "patrick rothfuss"))
+const q = query(colRef, orderBy("createdAt"))
 
 // realtime collection data
 onSnapshot(q, (snapshot) => {
@@ -38,6 +40,8 @@ onSnapshot(q, (snapshot) => {
         books.push({ ...doc.data(), id: doc.id })
     })
     console.log( books )
+}, (error) => {
+    console.log( error )
 })
 
 // adding documents
@@ -48,6 +52,7 @@ addBookForm.addEventListener('submit', (e) => {
     addDoc(colRef, {
         title: addBookForm.title.value,
         author: addBookForm.author.value,
+        createdAt: serverTimestamp(),
     })
     .then(() => {
         addBookForm.reset();

@@ -17,6 +17,8 @@ import {
 import { 
     createUserWithEmailAndPassword,
     getAuth,
+    signInWithEmailAndPassword,
+    signOut,
 } from 'firebase/auth'
 
 const firebaseConfig = {
@@ -29,11 +31,11 @@ const firebaseConfig = {
 };
 
 // init firebase app
-initializeApp( firebaseConfig );
+const app = initializeApp( firebaseConfig );
 
 // init services
-const db = getFirestore()
-const auth = getAuth()
+const db = getFirestore(app)
+const auth = getAuth(app)
 
 // collection ref
 const colRef = collection(db, 'books')
@@ -121,6 +123,37 @@ createUserForm.addEventListener('submit', (e) => {
             createUserForm.reset()
         })
         .catch((error) => {
+            console.log( error.message )
+        })
+})
+
+// Login a user
+const loginUserForm = document.querySelector(".login")
+loginUserForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const email = loginUserForm.email.value
+    const password = loginUserForm.password.value
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            console.log('Logged In', userCredential.user)
+        })
+        .catch(error => {
+            console.log( error.code )
+            console.log( error.message )
+        })
+})
+
+
+// Logout a User
+const logoutUserBtn = document.querySelector('.logout')
+logoutUserBtn.addEventListener('click', () => {
+    signOut(auth)
+        .then(() => {
+            console.log('The User Signed out')
+        })
+        .catch((error) => {
+            console.log( error.code )
             console.log( error.message )
         })
 })

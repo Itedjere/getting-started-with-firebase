@@ -45,7 +45,7 @@ const colRef = collection(db, 'books')
 const q = query(colRef, orderBy("createdAt"))
 
 // realtime collection data
-onSnapshot(q, (snapshot) => {
+const unSubscribeCollection = onSnapshot(q, (snapshot) => {
     let books = []
     snapshot.docs.forEach((doc) => {
         books.push({ ...doc.data(), id: doc.id })
@@ -105,7 +105,7 @@ getDoc(docRef)
         console.log( doc.data(), doc.id )
     })
 
-onSnapshot(docRef, (snapshot) => {
+const unSubscribeDoc = onSnapshot(docRef, (snapshot) => {
     console.log( snapshot.data(), snapshot.id )
 }, (error) => {
     console.log( error )
@@ -159,10 +159,19 @@ logoutUserBtn.addEventListener('click', () => {
         })
 })
 
-onAuthStateChanged(auth, (user) => {
+const unSubscribeAuth = onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log('User: ', user)
     } else {
         console.log('User: ', user)
     }
+})
+
+const unsubscribeBtn = document.querySelector('.unsubscribeBtn')
+unsubscribeBtn.addEventListener('click', () => {
+    unSubscribeAuth()
+    unSubscribeCollection()
+    unSubscribeDoc()
+
+    console.log('Unsubscribe from all')
 })

@@ -17,6 +17,7 @@ import {
 import { 
     createUserWithEmailAndPassword,
     getAuth,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
 } from 'firebase/auth'
@@ -156,4 +157,12 @@ logoutUserBtn.addEventListener('click', () => {
             console.log( error.code )
             console.log( error.message )
         })
+})
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log('User: ', user)
+    } else {
+        console.log('User: ', user)
+    }
 })

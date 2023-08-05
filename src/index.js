@@ -14,6 +14,11 @@ import {
     updateDoc,
 } from 'firebase/firestore'
 
+import { 
+    createUserWithEmailAndPassword,
+    getAuth,
+} from 'firebase/auth'
+
 const firebaseConfig = {
     apiKey: "AIzaSyBp-SxTtmzgxgpE3T7VvT9vLxnwNPBRGZE",
     authDomain: "fir-9-lessons-12847.firebaseapp.com",
@@ -28,6 +33,7 @@ initializeApp( firebaseConfig );
 
 // init services
 const db = getFirestore()
+const auth = getAuth()
 
 // collection ref
 const colRef = collection(db, 'books')
@@ -100,4 +106,21 @@ onSnapshot(docRef, (snapshot) => {
     console.log( snapshot.data(), snapshot.id )
 }, (error) => {
     console.log( error )
+})
+
+// create a new user
+const createUserForm = document.querySelector('.user')
+createUserForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    let email = createUserForm.email.value
+    let password = createUserForm.password.value
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((cred) => {
+            console.log( 'User Created: ', cred.user )
+            createUserForm.reset()
+        })
+        .catch((error) => {
+            console.log( error.message )
+        })
 })

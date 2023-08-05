@@ -11,6 +11,7 @@ import {
     orderBy,
     serverTimestamp,
     getDoc,
+    updateDoc,
 } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -71,6 +72,20 @@ deleteBookForm.addEventListener('submit', (e) => {
         .then(() => {
             deleteBookForm.reset();
         })
+})
+
+// Updating documents
+const updateBookForm = document.querySelector('.update')
+updateBookForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const docRef = doc(db, 'books', updateBookForm.id.value)
+
+    updateDoc(docRef, {
+        title: updateBookForm.title.value
+    }).then(() => {
+        updateBookForm.reset()
+    })
 })
 
 // get a single document
